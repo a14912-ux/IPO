@@ -182,81 +182,102 @@ function VeiculosList() {
   const [deleteId, setDeleteId] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-
-
   const navigate = useNavigate();
+
   useEffect(() => {
     fetchData();
   }, []);
-
 
   const openDeleteModal = (id) => {
     setDeleteId(id);
     setShowDeleteModal(true);
   };
 
-
   const closeDeleteModal = () => {
     setDeleteId(null);
     setShowDeleteModal(false);
   };
 
-
-
   const confirmDelete = async (id) => {
     try {
-      const response = await fetch(API_BASE + '/veiculos/' + id, { method: 'DELETE' });
+      const response = await fetch(API_BASE + '/veiculos/' + id, {
+        method: 'DELETE'
+      });
+
       const data = await response.json();
+
       if (data.success) {
         fetchData();
       } else {
         setMensagemErro(data.message);
       }
     } catch {
-      setMensagemErro('Erro ao eliminar veiculo');
-    }
-    finally {
+      setMensagemErro('Erro ao eliminar veículo');
+    } finally {
       closeDeleteModal();
     }
   };
-
 
   const fetchData = async () => {
     try {
       const response = await fetch(API_BASE + '/veiculos');
       const data = await response.json();
+
       if (data.success) {
         setVeiculos(data.data);
       } else {
         setMensagemErro(data.message);
       }
     } catch {
-      setMensagemErro('Erro ao carregar veiculos');
+      setMensagemErro('Erro ao carregar veículos');
     } finally {
       setLoading(false);
     }
   };
 
-   if (loading) return <p>Carregando...</p>;
+  if (loading) return <p>Carregando...</p>;
+
   return (
     <>
       <div className="row">
         <div className="col-6">
-          <h2>Veiculo</h2>
+          <h2>Veículos</h2>
         </div>
+
         <div className="col-6 text-right">
-          <button className="btn btn-dark ml-3" ><i className="fa fa-plus-square" aria-hidden="true"></i> Novo Veiculo</button>
-          <button className="btn btn-light ml-3" onClick={fetchData}><i className="fa fa-refresh" aria-hidden="true"></i> Atualizar</button>
+          <button className="btn btn-dark ml-3">
+            <i className="fa fa-plus-square" aria-hidden="true"></i>
+            {' '}Novo Veículo
+          </button>
+
+          <button
+            className="btn btn-light ml-3"
+            onClick={fetchData}
+          >
+            <i className="fa fa-refresh" aria-hidden="true"></i>
+            {' '}Atualizar
+          </button>
         </div>
       </div>
+
       {mensagemErro && (
-        <div className="alert alert-danger alert-dismissible fade show" role="alert">
+        <div
+          className="alert alert-danger alert-dismissible fade show"
+          role="alert"
+        >
           {mensagemErro}
-          <button type="button" className="close" onClick={() => setMensagemErro('')} aria-label="Close">
+
+          <button
+            type="button"
+            className="close"
+            onClick={() => setMensagemErro('')}
+            aria-label="Close"
+          >
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
       )}
+
       <table className="table table-striped">
         <thead>
           <tr>
@@ -265,21 +286,33 @@ function VeiculosList() {
             <th>Ano Fabrico</th>
             <th>Nome do Cliente</th>
             <th>Marca</th>
+            <th>Opções</th>
           </tr>
         </thead>
+
         <tbody>
-          {veiculos.map(veiculo => (
+          {veiculos.map((veiculo) => (
             <tr key={veiculo.matricula}>
               <td>{veiculo.matricula}</td>
               <td>{veiculo.data_livrete}</td>
               <td>{veiculo.ano_fabrico}</td>
               <td>{veiculo.nome_cliente}</td>
               <td>{veiculo.marca}</td>
+
               <td style={{ whiteSpace: 'nowrap' }}>
-                <button className="btn btn-dark btn-sm mr-2" ><i className='fa fa-eye' aria-hidden='true'></i></button>
-                <button className="btn btn-dark btn-sm mr-2" ><i className='fa fa-pencil' aria-hidden='true'></i></button>
-                <button className="btn btn-dark btn-sm" onClick={() => openDeleteModal(veiculo.matricula)}>
-                  <i className='fa fa-trash' aria-hidden='true'></i>
+                <button className="btn btn-dark btn-sm mr-2">
+                  <i className="fa fa-eye" aria-hidden="true"></i>
+                </button>
+
+                <button className="btn btn-dark btn-sm mr-2">
+                  <i className="fa fa-pencil" aria-hidden="true"></i>
+                </button>
+
+                <button
+                  className="btn btn-dark btn-sm"
+                  onClick={() => openDeleteModal(veiculo.matricula)}
+                >
+                  <i className="fa fa-trash" aria-hidden="true"></i>
                 </button>
               </td>
             </tr>
@@ -290,22 +323,50 @@ function VeiculosList() {
       {showDeleteModal && (
         <>
           <div className="modal-backdrop fade show"></div>
-          <div className="modal fade show" style={{ display: 'block' }} tabIndex="-1" role="dialog">
+
+          <div
+            className="modal fade show"
+            style={{ display: 'block' }}
+            tabIndex="-1"
+            role="dialog"
+          >
             <div className="modal-dialog" role="document">
               <div className="modal-content">
+
                 <div className="modal-header">
                   <h5 className="modal-title">Confirmação</h5>
-                  <button type="button" className="close" onClick={closeDeleteModal}>
+
+                  <button
+                    type="button"
+                    className="close"
+                    onClick={closeDeleteModal}
+                  >
                     <span>&times;</span>
                   </button>
                 </div>
+
                 <div className="modal-body">
-                  <p>Tem certeza que deseja eliminar este veiculo?</p>
+                  <p>Tem certeza que deseja eliminar este veículo?</p>
                 </div>
+
                 <div className="modal-footer">
-                  <button type="button" className="btn btn-secondary" onClick={closeDeleteModal}>Cancelar</button>
-                  <button type="button" className="btn btn-danger" onClick={() => confirmDelete(deleteId)}>Confirmar</button>
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={closeDeleteModal}
+                  >
+                    Cancelar
+                  </button>
+
+                  <button
+                    type="button"
+                    className="btn btn-danger"
+                    onClick={() => confirmDelete(deleteId)}
+                  >
+                    Confirmar
+                  </button>
                 </div>
+
               </div>
             </div>
           </div>
@@ -313,7 +374,6 @@ function VeiculosList() {
       )}
     </>
   );
-    return (<h2>Página de Veículos</h2>);
 }
 
 
